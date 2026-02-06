@@ -92,7 +92,7 @@ class Conversation(BaseModel):
         return response.json()
 
     def chat_stream(self, message: str, context: int = None) -> Iterator[ChatResponse]:
-        url = f"https://api.agentx.so/api/v1/access/conversations/{self.id}/jsonmessagesse"
+        url = f"https://api.agentx.so/api/v1/access/conversations/{self.id}/jsonmessages"
         response = requests.post(
             url, headers=get_headers(), json={"message": message, "context": context}
         )
