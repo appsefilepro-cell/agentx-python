@@ -6,7 +6,7 @@ with the AgentX SDK. Includes both paid and free alternatives.
 """
 
 from typing import Dict, List, Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 
 
@@ -311,22 +311,18 @@ class IntegrationManager:
 
 
 # Agent Executor for task orchestration
+def _default_deployments() -> List[str]:
+    """Default deployment targets."""
+    return ["sandbox-ubuntu", "docker", "google-cloud-run", "github-actions"]
+
+
 @dataclass
 class AgentExecutorConfig:
     """Configuration for Agent X5 executor."""
     max_agents: int = 750
     max_coding_agents: int = 1500
     tasks_per_second: int = 605
-    default_deployments: List[str] = None
-
-    def __post_init__(self):
-        if self.default_deployments is None:
-            self.default_deployments = [
-                "sandbox-ubuntu",
-                "docker",
-                "google-cloud-run",
-                "github-actions"
-            ]
+    default_deployments: List[str] = field(default_factory=_default_deployments)
 
 
 class AgentExecutor:

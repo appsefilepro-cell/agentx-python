@@ -1,8 +1,6 @@
 from typing import Optional, List
 from pydantic import BaseModel, Field
 import requests
-import os
-import logging
 from agentx.util import get_headers
 from .conversation import Conversation
 
@@ -10,9 +8,13 @@ from .conversation import Conversation
 class Agent(BaseModel):
     id: str = Field(alias="_id")
     name: str
-    avatar: Optional[str]
-    createdAt: Optional[str]
-    updatedAt: Optional[str]
+    avatar: Optional[str] = None
+    createdAt: Optional[str] = None
+    updatedAt: Optional[str] = None
+
+    class Config:
+        populate_by_name = True
+        extra = "ignore"
 
     def __init__(self, **data):
         super().__init__(**data)
