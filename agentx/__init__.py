@@ -8,6 +8,12 @@ from agentx.integrations import (
     PricingTier,
     get_free_alternative,
     get_all_free_tools,
+    AgentExecutor,
+    AgentExecutorConfig,
+    EnterpriseIntegration,
+    get_enterprise_integration,
+    list_enterprise_integrations,
+    get_free_enterprise_integrations,
 )
 
 logging.basicConfig(
@@ -23,5 +29,11 @@ __all__ = [
     "PricingTier",
     "get_free_alternative",
     "get_all_free_tools",
+    "AgentExecutor",
+    "AgentExecutorConfig",
+    "EnterpriseIntegration",
+    "get_enterprise_integration",
+    "list_enterprise_integrations",
+    "get_free_enterprise_integrations",
 ]
 __version__ = VERSION
