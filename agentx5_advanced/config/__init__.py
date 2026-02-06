@@ -1,0 +1,23 @@
+"""AgentX5 Advanced Edition Configuration Package."""
+
+from agentx5_advanced.config.settings import (
+    AGENTX5_CONFIG,
+    ABACUS_CONFIG,
+    DEPLOYMENT_TARGETS,
+    LEGAL_DRAFTING_CONFIG,
+    ACTIVE_CASES,
+    DEPLOYMENT_CHECKLIST,
+    TOTAL_BASE_ECONOMIC_LOSS,
+    MAX_WITH_PUNITIVE,
+)
+
+__all__ = [
+    "AGENTX5_CONFIG",
+    "ABACUS_CONFIG",
+    "DEPLOYMENT_TARGETS",
+    "LEGAL_DRAFTING_CONFIG",
+    "ACTIVE_CASES",
+    "DEPLOYMENT_CHECKLIST",
+    "TOTAL_BASE_ECONOMIC_LOSS",
+    "MAX_WITH_PUNITIVE",
+]
