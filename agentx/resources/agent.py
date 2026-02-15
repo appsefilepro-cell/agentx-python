@@ -1,30 +1,33 @@
 from typing import Optional, List
 from pydantic import BaseModel, Field
 import requests
-import os
-import logging
-from dataclasses import dataclass
 from agentx.util import get_headers
 from .conversation import Conversation
 
 
-@dataclass
 class Agent(BaseModel):
     id: str = Field(alias="_id")
     name: str
-    avatar: Optional[str]
-    createdAt: Optional[str]
-    updatedAt: Optional[str]
+    avatar: Optional[str] = None
+    createdAt: Optional[str] = None
+    updatedAt: Optional[str] = None
+
+    class Config:
+        populate_by_name = True
+        extra = "ignore"
 
     def __init__(self, **data):
         super().__init__(**data)
 
     def get_conversation(self, id: str) -> Conversation:
         list_of_conversations = self.list_conversations()
-        return next(
+        conversation = next(
             (conv for conv in list_of_conversations if conv.id == id),
-            Exception("404 - Conversation not found"),
+            None,
         )
+        if conversation is None:
+            raise Exception("404 - Conversation not found")
+        return conversation
 
     def list_conversations(self) -> List[Conversation]:
         url = f"https://api.agentx.so/api/v1/access/agents/{self.id}/conversations"

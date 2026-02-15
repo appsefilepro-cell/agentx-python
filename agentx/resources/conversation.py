@@ -6,11 +6,11 @@ from agentx.util import get_headers
 
 
 class ChatResponse(BaseModel):
-    text: str | None
-    cot: str | None
+    text: Optional[str] = None
+    cot: Optional[str] = None
     botId: str
-    reference: Optional[Any]
-    tasks: Optional[Any]
+    reference: Optional[Any] = None
+    tasks: Optional[Any] = None
 
 
 class Message(BaseModel):
@@ -19,8 +19,8 @@ class Message(BaseModel):
     role: str  # user or bot
     botId: Optional[str] = Field(alias="bot", default=None)
     userId: Optional[str] = Field(alias="user", default=None)
-    text: str | None
-    cot: str | None
+    text: Optional[str] = None
+    cot: Optional[str] = None
     createdAt: str
     updatedAt: str
 
@@ -33,10 +33,10 @@ class Conversation(BaseModel):
     agent_id: str
     id: str = Field(alias="_id")
     title: Optional[str] = Field(default=None)  # conversation customized title
-    users: List[str]
-    agents: List[str] = Field(alias="bots")
-    createdAt: Optional[str]
-    updatedAt: Optional[str]
+    users: List[str] = Field(default_factory=list)
+    agents: List[str] = Field(alias="bots", default_factory=list)
+    createdAt: Optional[str] = None
+    updatedAt: Optional[str] = None
 
     class Config:
         populate_by_name = True
@@ -92,7 +92,7 @@ class Conversation(BaseModel):
         return response.json()
 
     def chat_stream(self, message: str, context: int = None) -> Iterator[ChatResponse]:
-        url = f"https://api.agentx.so/api/v1/access/conversations/{self.id}/jsonmessagesse"
+        url = f"https://api.agentx.so/api/v1/access/conversations/{self.id}/jsonmessages"
         response = requests.post(
             url, headers=get_headers(), json={"message": message, "context": context}
         )
