@@ -4,6 +4,7 @@ AgentX5 Advanced Edition
 
 Permanent multi-environment AI orchestration system with 1500+ agent fleet.
 Includes Abacus AI CLI integration, legal drafting, and forensic analysis.
+ClawBot fleet with Kimi Claw, OpenAI Codex, Manus, GenSpark, and more.
 
 Environments Supported:
 - Cloud (Vercel, Google Cloud Run)
@@ -27,6 +28,8 @@ from agentx5_advanced.config.settings import (
     ABACUS_CONFIG,
     DEPLOYMENT_TARGETS,
 )
+from agentx5_advanced.agents.clawbot_manager import ClawBotManager
+from agentx5_advanced.agents.task_manager import TaskScreenManager
 
 __all__ = [
     "AgentX5Orchestrator",
@@ -35,6 +38,8 @@ __all__ = [
     "AGENTX5_CONFIG",
     "ABACUS_CONFIG",
     "DEPLOYMENT_TARGETS",
+    "ClawBotManager",
+    "TaskScreenManager",
 ]
 
 __version__ = "1.0.0"

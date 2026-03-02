@@ -314,8 +314,8 @@ RECOMMENDATION: Amend tax filings and pursue recovery of unauthorized withdrawal
 --------------------------------------------------------------------------------
 TOTALS:     | ${totals['total_deposits']:>10,.2f} | ${totals['total_withdrawals']:>10,.2f} | """
         worksheet += f"${totals['total_net_cash_flow']:>10,.2f} | ${totals['total_shadow_removal']:>10,.2f} | "
-        worksheet += f"${totals['total_eps_overstatement']:>10,.2f} | ${totals['total_adjusted']:>10,.2f} |
-================================================================================
+        worksheet += f"${totals['total_eps_overstatement']:>10,.2f} | ${totals['total_adjusted']:>10,.2f} |\n"
+        worksheet += f"""================================================================================
 
 {self.get_cpa_interpretation()}
 """

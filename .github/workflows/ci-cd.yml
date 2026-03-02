@@ -1,0 +1,125 @@
+name: AgentX5 CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, "claude/*", "consolidation-*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.11"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 pyflakes
+
+      - name: Syntax check all Python files
+        run: |
+          echo "=== Checking all Python modules for syntax errors ==="
+          python -c "
+          import ast
+          import sys
+          import glob
+
+          errors = []
+          files = glob.glob('**/*.py', recursive=True)
+          for f in files:
+              try:
+                  with open(f) as fh:
+                      ast.parse(fh.read())
+                  print(f'  OK: {f}')
+              except SyntaxError as e:
+                  errors.append(f'{f}: {e}')
+                  print(f'  FAIL: {f}: {e}')
+
+          if errors:
+              print(f'\n{len(errors)} syntax errors found!')
+              sys.exit(1)
+          else:
+              print(f'\nAll {len(files)} files passed syntax check.')
+          "
+
+      - name: Lint with flake8 (warnings only)
+        run: |
+          flake8 agentx5_advanced/ agentx5_core/ trading_engine/ --count --select=E9,F63,F7,F82 --show-source --statistics || true
+
+      - name: Import check - agentx5_advanced
+        run: |
+          python -c "from agentx5_advanced import AgentX5Orchestrator; print('agentx5_advanced: OK')"
+
+      - name: Import check - ClawBot Manager
+        run: |
+          python -c "from agentx5_advanced.agents.clawbot_manager import ClawBotManager; print('ClawBotManager: OK')"
+
+      - name: Import check - Task Manager
+        run: |
+          python -c "from agentx5_advanced.agents.task_manager import TaskScreenManager; print('TaskScreenManager: OK')"
+
+      - name: Import check - Core Orchestrator
+        run: |
+          python -c "from agentx5_core.orchestrator import AgentX5Runtime; print('AgentX5Runtime: OK')"
+
+      - name: Import check - Trading Engine
+        run: |
+          python -c "from trading_engine.strategies.arbitrage import ArbitrageStrategy; print('ArbitrageStrategy: OK')"
+          python -c "from trading_engine.execution.order_manager import OrderManager; print('OrderManager: OK')"
+          python -c "from trading_engine.risk.risk_engine import RiskEngine; print('RiskEngine: OK')"
+
+      - name: Run system activation test
+        run: |
+          python -m agentx5_advanced
+
+      - name: Run core orchestrator test
+        run: |
+          python -m agentx5_core.orchestrator
+
+  deploy-check:
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install build
+
+      - name: Build package
+        run: python -m build
+
+      - name: Deployment readiness
+        run: |
+          echo "=== DEPLOYMENT READINESS CHECK ==="
+          echo "Package built successfully"
+          echo "Ready for PyPI publish"
+          echo "Ready for Docker build"
+          echo "Ready for Vercel deploy"

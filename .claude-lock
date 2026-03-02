@@ -1,0 +1,5 @@
+MASTER_REPO=Private-Claude
+ALLOW_NEW_REPOS=false
+ALLOW_DUPLICATES=false
+CONSOLIDATION_TARGET=appsefilepro-cell/Private-Claude
+SINGLE_SOURCE_OF_TRUTH=true
