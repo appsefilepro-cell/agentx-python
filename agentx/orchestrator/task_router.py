@@ -36,17 +36,25 @@ CATEGORY_CAPABILITY_MAP: Dict[str, List[AgentCapability]] = {
 
 # Primary agent assignment for each category (ordered by preference)
 PRIMARY_ROUTING_TABLE: Dict[str, List[str]] = {
-    "coding": ["openai_codex", "claude_code", "github_copilot", "manus"],
-    "testing": ["openai_codex", "manus", "gitlab_duo", "claude_code"],
-    "deployment": ["gitlab_duo", "github_copilot", "google_cloud_cli", "manus"],
+    "coding": ["openai_codex", "claude_code", "kimi", "github_copilot", "manus"],
+    "testing": ["openai_codex", "manus", "kimi_claw", "gitlab_duo", "claude_code"],
+    "deployment": ["gitlab_duo", "github_copilot", "google_cloud_cli", "manus", "genspark"],
     "legal": ["abacus_ai", "claude_code"],
-    "documentation": ["claude_code", "abacus_ai", "github_copilot"],
-    "integration": ["zapier_duo", "openai_codex", "claude_code", "manus"],
-    "remediation": ["claude_code", "openai_codex", "gitlab_duo"],
-    "automation": ["zapier_duo", "manus", "vscode_ai", "github_copilot"],
+    "documentation": ["claude_code", "kimi", "abacus_ai", "github_copilot"],
+    "integration": ["zapier_duo", "genspark", "openai_codex", "claude_code", "manus"],
+    "remediation": ["claude_code", "openai_codex", "kimi_claw", "gitlab_duo"],
+    "automation": ["zapier_duo", "kimi_claw", "manus", "genspark", "vscode_ai", "github_copilot"],
     "security": ["gitlab_duo", "claude_code", "openai_codex"],
-    "review": ["claude_code", "github_copilot", "gitlab_duo"],
+    "review": ["claude_code", "kimi", "github_copilot", "gitlab_duo"],
 }
+
+# Emergency fallback chain - free APIs for when paid agents fail
+EMERGENCY_FALLBACK_CHAIN: List[str] = [
+    "deepseek",      # Best free coder
+    "groq",          # Fast inference
+    "gemini_free",   # Google free tier
+    "cloudflare_workers_ai",  # Edge deployment
+]
 
 
 class TaskRouter:
@@ -126,3 +134,37 @@ class TaskRouter:
                     names.append(f"{profile.name} ({profile.provider})")
             resolved[category] = names
         return resolved
+
+    def route_with_fallback(
+        self, category: str, priority: str = "medium"
+    ) -> List[str]:
+        """
+        Route a task with full fallback chain including emergency free APIs.
+
+        Returns ordered list of agent IDs to try.
+        """
+        # Start with primary routing
+        candidates = list(PRIMARY_ROUTING_TABLE.get(category, []))
+
+        # Add emergency fallback chain for free APIs
+        for fallback_agent in EMERGENCY_FALLBACK_CHAIN:
+            if fallback_agent not in candidates:
+                profile = self.registry.get(fallback_agent)
+                if profile and profile.enabled:
+                    candidates.append(fallback_agent)
+
+        return candidates
+
+    def get_emergency_fallbacks(self) -> List[str]:
+        """Get list of emergency fallback agents (free tier)."""
+        available = []
+        for agent_id in EMERGENCY_FALLBACK_CHAIN:
+            profile = self.registry.get(agent_id)
+            if profile and profile.enabled:
+                available.append(agent_id)
+        return available
+
+    def is_free_tier(self, agent_id: str) -> bool:
+        """Check if an agent is on the free tier."""
+        profile = self.registry.get(agent_id)
+        return profile is not None and profile.cost_tier == "budget"

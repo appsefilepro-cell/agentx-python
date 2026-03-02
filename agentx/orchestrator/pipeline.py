@@ -105,6 +105,7 @@ class PipelineConfig(BaseModel):
     def load_keys_from_env(self):
         """Load all agent API keys from environment variables."""
         key_mapping = {
+            # Primary agents
             "claude": "ANTHROPIC_API_KEY",
             "openai": "OPENAI_API_KEY",
             "github_copilot": "GITHUB_TOKEN",
@@ -117,6 +118,15 @@ class PipelineConfig(BaseModel):
             "abacus": "ABACUS_API_KEY",
             "manus": "MANUS_API_KEY",
             "firecrawl": "FIRECRAWL_API_KEY",
+            # New coding agents
+            "kimi": "KIMI_API_KEY",
+            "genspark": "GENSPARK_API_KEY",
+            # Free backup APIs
+            "groq": "GROQ_API_KEY",
+            "gemini": "GEMINI_API_KEY",
+            "deepseek": "DEEPSEEK_API_KEY",
+            "cloudflare": "CLOUDFLARE_API_TOKEN",
+            "cloudflare_account": "CLOUDFLARE_ACCOUNT_ID",
         }
         for agent_name, env_var in key_mapping.items():
             value = os.getenv(env_var)

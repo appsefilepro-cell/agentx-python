@@ -17,7 +17,7 @@ Agents:
 10. Firecrawl - Web crawling & data extraction
 """
 
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 from pydantic import BaseModel, Field
 from enum import Enum
 
@@ -440,7 +440,116 @@ AGENT_PROFILES: Dict[str, AgentProfile] = {
         priority_rank=3,
     ),
     # --------------------------------------------------------
-    # 10. FIRECRAWL - Web Crawling & Data Extraction
+    # 10. KIMI - Moonshot AI Coding Assistant
+    # --------------------------------------------------------
+    "kimi": AgentProfile(
+        id="kimi",
+        name="Kimi 2.5",
+        provider="Moonshot AI",
+        description="Moonshot AI's Kimi 2.5 - Advanced coding assistant with strong multilingual support and long-context understanding.",
+        version="kimi-2.5",
+        api_env_var="KIMI_API_KEY",
+        strengths=[
+            "Excellent long-context understanding (200K+ tokens)",
+            "Strong multilingual code generation (Chinese, English, etc.)",
+            "Advanced reasoning and step-by-step problem solving",
+            "Good at code explanation and documentation",
+            "Fast inference speed for interactive coding",
+            "Strong mathematical and algorithmic problem solving",
+        ],
+        weaknesses=[
+            "Primarily optimized for Chinese language contexts",
+            "Less mature tool-use compared to OpenAI/Anthropic",
+            "Limited sandbox execution capabilities",
+            "API availability may vary by region",
+        ],
+        capabilities=[
+            AgentCapability.CODE_GENERATION,
+            AgentCapability.CODE_REVIEW,
+            AgentCapability.DEBUGGING,
+            AgentCapability.DOCUMENTATION,
+            AgentCapability.REFACTORING,
+        ],
+        max_context_tokens=200000,
+        supports_streaming=True,
+        supports_sandbox=False,
+        cost_tier="standard",
+        priority_rank=4,
+    ),
+    # --------------------------------------------------------
+    # 11. KIMI CLAW - Autonomous Multi-Agent Coordinator
+    # --------------------------------------------------------
+    "kimi_claw": AgentProfile(
+        id="kimi_claw",
+        name="Kimi Claw",
+        provider="Moonshot AI / AgentX",
+        description="Autonomous multi-agent coordinator using Kimi as the backbone. Orchestrates 1500 Clawbot instances for parallel task execution.",
+        version="kimi-claw-1.0",
+        api_env_var="KIMI_API_KEY",
+        strengths=[
+            "Coordinates multiple agent instances in parallel",
+            "Autonomous task decomposition and delegation",
+            "Real-time progress monitoring across agents",
+            "Automatic error recovery and task reassignment",
+            "Scales to 1500+ concurrent agent operations",
+            "Integration with Clawbot nightly automation",
+        ],
+        weaknesses=[
+            "Higher latency for coordination overhead",
+            "Requires stable network for multi-agent sync",
+            "Complex debugging when agents conflict",
+            "Resource intensive for large-scale operations",
+        ],
+        capabilities=[
+            AgentCapability.CODE_GENERATION,
+            AgentCapability.WORKFLOW_AUTOMATION,
+            AgentCapability.SANDBOX_EXECUTION,
+            AgentCapability.TESTING,
+            AgentCapability.DEPLOYMENT,
+        ],
+        max_context_tokens=200000,
+        supports_streaming=True,
+        supports_sandbox=True,
+        cost_tier="premium",
+        priority_rank=2,
+    ),
+    # --------------------------------------------------------
+    # 12. GENSPARK - Agent Orchestration Platform
+    # --------------------------------------------------------
+    "genspark": AgentProfile(
+        id="genspark",
+        name="Genspark",
+        provider="Genspark",
+        description="Agent orchestration platform for coordinating multiple AI agents. Specializes in complex multi-step workflows.",
+        version="genspark-latest",
+        api_env_var="GENSPARK_API_KEY",
+        strengths=[
+            "Multi-agent workflow orchestration",
+            "Visual workflow builder integration",
+            "Cross-platform agent coordination",
+            "Built-in error handling and retry logic",
+            "Real-time execution monitoring",
+            "Integration with popular AI providers",
+        ],
+        weaknesses=[
+            "Adds orchestration latency",
+            "Dependent on external service availability",
+            "Learning curve for workflow configuration",
+            "Limited direct code generation capability",
+        ],
+        capabilities=[
+            AgentCapability.WORKFLOW_AUTOMATION,
+            AgentCapability.API_INTEGRATION,
+            AgentCapability.DEPLOYMENT,
+        ],
+        max_context_tokens=32000,
+        supports_streaming=True,
+        supports_sandbox=True,
+        cost_tier="standard",
+        priority_rank=6,
+    ),
+    # --------------------------------------------------------
+    # 13. FIRECRAWL - Web Crawling & Data Extraction
     # --------------------------------------------------------
     "firecrawl": AgentProfile(
         id="firecrawl",
@@ -472,6 +581,145 @@ AGENT_PROFILES: Dict[str, AgentProfile] = {
         supports_sandbox=False,
         cost_tier="standard",
         priority_rank=8,
+    ),
+    # ============================================================
+    # FREE BACKUP API AGENTS (Emergency Fallback)
+    # ============================================================
+    # --------------------------------------------------------
+    # 14. GROQ - Free Tier Fast Inference
+    # --------------------------------------------------------
+    "groq": AgentProfile(
+        id="groq",
+        name="Groq (Free Tier)",
+        provider="Groq",
+        description="Ultra-fast inference using Groq hardware. Free tier available with rate limits. Uses Llama/Mixtral models.",
+        version="groq-llama-3.1-70b",
+        api_env_var="GROQ_API_KEY",
+        strengths=[
+            "Extremely fast inference (500+ tokens/sec)",
+            "Free tier with generous rate limits",
+            "Access to Llama 3.1 and Mixtral models",
+            "Low latency for interactive coding",
+            "Good for quick code generation tasks",
+        ],
+        weaknesses=[
+            "Rate limited on free tier",
+            "Smaller context window than premium models",
+            "No native tool use or function calling",
+            "Limited to text completion tasks",
+        ],
+        capabilities=[
+            AgentCapability.CODE_GENERATION,
+            AgentCapability.DEBUGGING,
+            AgentCapability.DOCUMENTATION,
+        ],
+        max_context_tokens=32000,
+        supports_streaming=True,
+        supports_sandbox=False,
+        cost_tier="budget",
+        priority_rank=10,
+    ),
+    # --------------------------------------------------------
+    # 15. GEMINI FREE - Google Gemini CLI Free Tier
+    # --------------------------------------------------------
+    "gemini_free": AgentProfile(
+        id="gemini_free",
+        name="Google Gemini (Free)",
+        provider="Google",
+        description="Google Gemini API free tier. 60 requests/minute, suitable for backup coding assistance.",
+        version="gemini-1.5-flash",
+        api_env_var="GEMINI_API_KEY",
+        strengths=[
+            "Free tier with 60 requests/minute",
+            "Good code generation capabilities",
+            "Multimodal support (can read images/diagrams)",
+            "Integration with Google Cloud ecosystem",
+            "Long context window (1M tokens on flash)",
+        ],
+        weaknesses=[
+            "Rate limited on free tier",
+            "Requires Google Cloud account",
+            "Less specialized for coding than Codex",
+            "May have regional restrictions",
+        ],
+        capabilities=[
+            AgentCapability.CODE_GENERATION,
+            AgentCapability.CODE_REVIEW,
+            AgentCapability.DEBUGGING,
+            AgentCapability.DOCUMENTATION,
+        ],
+        max_context_tokens=1000000,
+        supports_streaming=True,
+        supports_sandbox=False,
+        cost_tier="budget",
+        priority_rank=11,
+    ),
+    # --------------------------------------------------------
+    # 16. CLOUDFLARE WORKERS AI - Free Tier
+    # --------------------------------------------------------
+    "cloudflare_workers_ai": AgentProfile(
+        id="cloudflare_workers_ai",
+        name="Cloudflare Workers AI",
+        provider="Cloudflare",
+        description="Cloudflare Workers AI free tier. Edge-deployed LLMs for fast, free inference.",
+        version="workers-ai-latest",
+        api_env_var="CLOUDFLARE_API_TOKEN",
+        strengths=[
+            "Free tier with 10K requests/day",
+            "Edge deployment for low latency",
+            "Access to multiple open models",
+            "No cold starts (always warm)",
+            "Good for simple code tasks",
+        ],
+        weaknesses=[
+            "Smaller models than premium providers",
+            "Limited context window",
+            "Basic code generation only",
+            "No advanced reasoning",
+        ],
+        capabilities=[
+            AgentCapability.CODE_GENERATION,
+            AgentCapability.DEBUGGING,
+        ],
+        max_context_tokens=8000,
+        supports_streaming=True,
+        supports_sandbox=False,
+        cost_tier="budget",
+        priority_rank=12,
+    ),
+    # --------------------------------------------------------
+    # 17. DEEPSEEK - DeepSeek Coder Free Tier
+    # --------------------------------------------------------
+    "deepseek": AgentProfile(
+        id="deepseek",
+        name="DeepSeek Coder",
+        provider="DeepSeek",
+        description="DeepSeek Coder - specialized coding model with free tier. Strong at code completion and generation.",
+        version="deepseek-coder-v2",
+        api_env_var="DEEPSEEK_API_KEY",
+        strengths=[
+            "Specialized for code generation",
+            "Free tier available",
+            "Strong performance on coding benchmarks",
+            "Good at code completion and infilling",
+            "Supports many programming languages",
+        ],
+        weaknesses=[
+            "Less general reasoning ability",
+            "Smaller context than GPT-4/Claude",
+            "Limited tool use capabilities",
+            "May have API availability issues",
+        ],
+        capabilities=[
+            AgentCapability.CODE_GENERATION,
+            AgentCapability.DEBUGGING,
+            AgentCapability.REFACTORING,
+        ],
+        max_context_tokens=64000,
+        supports_streaming=True,
+        supports_sandbox=False,
+        cost_tier="budget",
+        priority_rank=9,
     ),
 }
 

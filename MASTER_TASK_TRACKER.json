@@ -2,7 +2,9 @@
   "project": "AgentX5 Multi-Agent Orchestration",
   "owner": "Apps Holdings WY Inc",
   "created": "2026-02-27",
-  "primary_agents": ["openai_codex", "kimi_claw", "clawbot"],
+  "updated": "2026-03-02",
+  "primary_agents": ["openai_codex", "kimi_claw", "kimi", "clawbot", "genspark"],
+  "backup_agents": ["groq", "gemini_free", "deepseek", "cloudflare_workers_ai"],
   "total_agents": 1500,
   "status": "ACTIVE",
   "tasks": [
@@ -28,9 +30,9 @@
     {"id": 20, "category": "testing", "task": "Create orchestrator test suite", "status": "completed", "agent": "claude_code"},
     {"id": 21, "category": "testing", "task": "Create integration test suite", "status": "completed", "agent": "claude_code"},
     {"id": 22, "category": "testing", "task": "Create remediation test suite", "status": "completed", "agent": "claude_code"},
-    {"id": 23, "category": "deployment", "task": "Commit all changes to branch", "status": "in_progress", "agent": "claude_code"},
-    {"id": 24, "category": "deployment", "task": "Push to remote repository", "status": "pending", "agent": "claude_code"},
-    {"id": 25, "category": "deployment", "task": "Create PR for main branch", "status": "pending", "agent": "claude_code"},
+    {"id": 23, "category": "deployment", "task": "Commit all changes to branch", "status": "completed", "agent": "claude_code"},
+    {"id": 24, "category": "deployment", "task": "Push to remote repository", "status": "completed", "agent": "claude_code"},
+    {"id": 25, "category": "deployment", "task": "Create PR for main branch", "status": "completed", "agent": "claude_code"},
     {"id": 26, "category": "remediation", "task": "Run Task 666 full scan", "status": "pending", "agent": "openai_codex"},
     {"id": 27, "category": "integration", "task": "Activate Zapier workflows", "status": "pending", "agent": "zapier_duo"},
     {"id": 28, "category": "integration", "task": "Configure Firebase deployment", "status": "pending", "agent": "google_cloud_cli"},
@@ -64,8 +66,20 @@
     "phase_4_remediation": {"status": "completed", "tasks": [17, 18]},
     "phase_5_automation": {"status": "completed", "tasks": [19]},
     "phase_6_testing": {"status": "completed", "tasks": [20, 21, 22]},
-    "phase_7_deployment": {"status": "in_progress", "tasks": [23, 24, 25]},
-    "phase_8_activation": {"status": "pending", "tasks": [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50]}
+    "phase_7_deployment": {"status": "completed", "tasks": [23, 24, 25]},
+    "phase_8_activation": {"status": "in_progress", "tasks": [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50]}
   },
-  "next_action": "Commit and push all code, then activate Codex and Clawbot"
+  "coding_agents_integrated": {
+    "kimi": {"status": "active", "profile": true, "connector": true},
+    "kimi_claw": {"status": "active", "profile": true, "connector": true},
+    "genspark": {"status": "active", "profile": true, "connector": true},
+    "manus": {"status": "active", "profile": true, "connector": true}
+  },
+  "free_backup_apis": {
+    "groq": {"status": "active", "profile": true, "fallback_order": 1},
+    "gemini_free": {"status": "active", "profile": true, "fallback_order": 2},
+    "deepseek": {"status": "active", "profile": true, "fallback_order": 3},
+    "cloudflare_workers_ai": {"status": "active", "profile": true, "fallback_order": 4}
+  },
+  "next_action": "Merge PR to main, then activate 1500 Clawbots with Kimi Claw orchestration"
 }
